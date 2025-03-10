@@ -1,6 +1,7 @@
 import pandas as pd
 import glob
 from fpdf import FPDF
+from pathlib import Path
 
 filepaths = glob.glob("invoices/*.xlsx")
 
@@ -11,11 +12,12 @@ for filepath in filepaths:
     pdf.add_page()
 
 # Printing out the page header
-    page_name = filepath.removeprefix("invoices\\").removesuffix(".xlsx")
-    pdf.set_font(family="Times", size=17, style="B")
-    pdf.cell(w=0, h=12, txt=f"Invoice nr.{page_name[0:5]}", border=1)
-    pdf.ln(12)
-    pdf.cell(w=0, h=12, txt=f"Date {page_name[6:]}", border=1)
-    print(page_name)
+    filename = Path(filepath).stem
+    invoice_nr = filename.split("-")[0]
+    invoice_date = filename.split("-")[1]
+    pdf.set_font(family="Times", size=16, style="B")
+    pdf.cell(w=0, h=8, txt=f"Invoice nr.{invoice_nr}", border=0)
+    pdf.ln(8)
+    pdf.cell(w=0, h=8, txt=f"Date {invoice_date}", border=0)
 
-    pdf.output("output.pdf")
+    pdf.output(f"PDFs/{filename}.pdf")
